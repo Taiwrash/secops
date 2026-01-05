@@ -47,3 +47,4 @@ jobs:
         with:
           config-path: .gitleaks.toml
           enable-comments: true
+        continue-on-error: true

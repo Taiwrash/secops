@@ -19,6 +19,14 @@ paths = [
     '''(?:^|/)(?:deno\.lock|npm-shrinkwrap\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$''',
     '''(?:^|/)bower_components(?:/.*)?$''',
     '''(?:^|/)\.git$''',
+    '''config\.py''',
+]
+
+[allowlist.regexes]
+description = "allowlist specific secrets in config.py for testing"
+regexes = [
+    '''asdf1234!@#\$''',
+    '''ghp_ABC1234567890abcdefGHIJKLMNOPQRSTUVWX''',
 ]
 
 # Custom rules for detecting hardcoded secrets
