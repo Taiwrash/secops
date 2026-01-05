@@ -3206,3 +3206,25 @@ id = "zendesk-secret-key"
 description = "Detected a Zendesk Secret Key, risking unauthorized access to customer support services and sensitive ticketing data."
 regex = '''(?i)[\w.-]{0,50}?(?:zendesk)(?:[ \t\w.-]{0,20})[\s'"]{0,3}(?:=|>|:{1,3}=|\|\||:|=>|\?=|,)[\x60'"\s=]{0,5}([a-z0-9]{40})(?:[\x60'"\s;]|\\[nr]|$)'''
 keywords = ["zendesk"]
+
+# Custom rules for VAmPI vulnerable API testing
+[[rules]]
+id = "custom-github-token-pattern"
+description = "Detects GitHub token patterns (ghp_*) in code"
+regex = '''ghp_[A-Za-z0-9_]{36,255}'''
+keywords = ["ghp_"]
+severity = "CRITICAL"
+
+[[rules]]
+id = "custom-test-secret-key"
+description = "Detects TEST_SECRET_KEY assignments with hardcoded values"
+regex = '''TEST_SECRET_KEY\d*\s*=\s*['"][^'"]{4,}['"]'''
+keywords = ["TEST_SECRET_KEY"]
+severity = "HIGH"
+
+[[rules]]
+id = "custom-config-secret-key"
+description = "Detects hardcoded SECRET_KEY in configuration"
+regex = '''SECRET_KEY\s*=\s*['"][^'"\n]{4,}['"]'''
+keywords = ["SECRET_KEY"]
+severity = "HIGH"
