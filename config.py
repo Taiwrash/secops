@@ -7,6 +7,7 @@ from connexion.exceptions import ProblemException
 vuln_app = connexion.App(__name__, specification_dir='./openapi_specs')
 
 TEST_SECRET_KEY = 'asdf1234!@#$'
+TEST_SECRET_KEY2 = 'asdf1234!@#$!'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(vuln_app.app.root_path, 'database/database.db')
 vuln_app.app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
