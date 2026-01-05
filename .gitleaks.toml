@@ -1,6 +1,24 @@
-title = "VAmPI Gitleaks Configuration"
-description = "Enhanced gitleaks configuration to catch custom secret patterns"
+# This file has been auto-generated. Do not edit manually.
+# If you would like to contribute new rules, please use
+# cmd/generate/config/main.go and follow the contributing guidelines
+# at https://github.com/gitleaks/gitleaks/blob/master/CONTRIBUTING.md
+#
+# How the hell does secret scanning work? Read this:
+#   https://lookingatcomputer.substack.com/p/regex-is-almost-all-you-need
+#
+# This is the default gitleaks configuration file.
+# Rules and allowlists are defined within this file.
+# Rules instruct gitleaks on what should be considered a secret.
+# Allowlists instruct gitleaks on what is allowed, i.e. not a secret.
 
+title = "gitleaks config"
+
+# minVersion indicates the minimum Gitleaks version required to use this config.
+# If the running version is older, a warning will be logged and not all
+# config-enabled features are guaranteed to work.
+minVersion = "v8.25.0"
+
+# TODO: change to [[allowlists]]
 [allowlist]
 description = "global allow lists"
 paths = [
@@ -18,31 +36,33 @@ paths = [
     '''(?:^|/)node_modules(?:/.*)?$''',
     '''(?:^|/)(?:deno\.lock|npm-shrinkwrap\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$''',
     '''(?:^|/)bower_components(?:/.*)?$''',
+    '''(?:^|/)(?:angular|bootstrap|jquery(?:-?ui)?|plotly|swagger-?ui)[a-zA-Z0-9.-]*(?:\.min)?\.js(?:\.map)?$''',
+    '''(?:^|/)javascript\.json$''',
+    '''(?:^|/)(?:Pipfile|poetry)\.lock$''',
+    '''(?i)(?:^|/)(?:v?env|virtualenv)/lib(?:64)?(?:/.*)?$''',
+    '''(?i)(?:^|/)(?:lib(?:64)?/python[23](?:\.\d{1,2})+|python/[23](?:\.\d{1,2})+/lib(?:64)?)(?:/.*)?$''',
+    '''(?i)(?:^|/)[a-z0-9_.]+-[0-9.]+\.dist-info(?:/.+)?$''',
+    '''(?:^|/)vendor/(?:bundle|ruby)(?:/.*?)?$''',
+    '''\.gem$''',
+    '''verification-metadata\.xml''',
+    '''Database.refactorlog''',
     '''(?:^|/)\.git$''',
 ]
-
-
-# Custom rules for detecting hardcoded secrets
-[[rules]]
-id = "custom-secret-key-pattern"
-description = "Detects hardcoded SECRET_KEY assignments"
-regex = '''(?i)(SECRET_KEY|secret_key)\s*=\s*['"][^'"]{4,}['"]'''
-keywords = ["SECRET_KEY"]
-severity = "HIGH"
-
-[[rules]]
-id = "custom-test-secret-pattern"
-description = "Detects TEST_SECRET assignments with optional digits"
-regex = '''(?i)(TEST_SECRET_KEY\d*)\s*=\s*['"][^'"]{4,}['"]'''
-keywords = ["TEST_SECRET"]
-severity = "HIGH"
-
-[[rules]]
-id = "hardcoded-weak-secret"
-description = "Detects weak hardcoded secrets in code"
-regex = '''(?i)(secret|password|key|token)\s*[=:]\s*['"]([a-zA-Z0-9!@#$%]{4,})['"]'''
-keywords = ["secret", "password"]
-severity = "MEDIUM"
+regexes = [
+    '''(?i)^true|false|null$''',
+    '''^(?i:a+|b+|c+|d+|e+|f+|g+|h+|i+|j+|k+|l+|m+|n+|o+|p+|q+|r+|s+|t+|u+|v+|w+|x+|y+|z+|\*+|\.+)$''',
+    '''^\$(?:\d+|{\d+})$''',
+    '''^\$(?:[A-Z_]+|[a-z_]+)$''',
+    '''^\${(?:[A-Z_]+|[a-z_]+)}$''',
+    '''^\{\{[ \t]*[\w ().|]+[ \t]*}}$''',
+    '''^\$\{\{[ \t]*(?:(?:env|github|secrets|vars)(?:\.[A-Za-z]\w+)+[\w "'&./=|]*)[ \t]*}}$''',
+    '''^%(?:[A-Z_]+|[a-z_]+)%$''',
+    '''^%[+\-# 0]?[bcdeEfFgGoOpqstTUvxX]$''',
+    '''^\{\d{0,2}}$''',
+    '''^@(?:[A-Z_]+|[a-z_]+)@$''',
+    '''^/Users/(?i)[a-z0-9]+/[\w .-/]+$''',
+    '''^/(?:bin|etc|home|opt|tmp|usr|var)/[\w ./-]+$''',
+]
 stopwords = [
     "014df517-39d1-4453-b7b3-9930c563627c",
     "abcdefghijklmnopqrstuvwxyz",
