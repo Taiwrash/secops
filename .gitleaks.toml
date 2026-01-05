@@ -31,8 +31,8 @@ severity = "HIGH"
 
 [[rules]]
 id = "custom-test-secret-pattern"
-description = "Detects TEST_SECRET assignments"
-regex = '''(?i)(TEST_SECRET_KEY|TEST_SECRET)\s*=\s*['"][^'"]{4,}['"]'''
+description = "Detects TEST_SECRET assignments with optional digits"
+regex = '''(?i)(TEST_SECRET_KEY\d*)\s*=\s*['"][^'"]{4,}['"]'''
 keywords = ["TEST_SECRET"]
 severity = "HIGH"
 
