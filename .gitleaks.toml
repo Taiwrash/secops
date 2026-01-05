@@ -1,0 +1,30 @@
+title = "VAmPI Gitleaks Configuration"
+description = "Enhanced gitleaks configuration to catch custom secret patterns"
+
+# Allowlist for false positives
+[[allowlist]]
+description = "Ignore comments in workflows"
+regexes = ["GITHUB_TOKEN", "DOCKERHUB"]
+paths = [".github/workflows"]
+
+# Custom rules for detecting hardcoded secrets
+[[rules]]
+id = "custom-secret-key-pattern"
+description = "Detects hardcoded SECRET_KEY assignments"
+regex = '''(?i)(SECRET_KEY|secret_key)\s*=\s*['"][^'"]{4,}['"]'''
+keywords = ["SECRET_KEY", "secret_key"]
+severity = "HIGH"
+
+[[rules]]
+id = "custom-test-secret-pattern"
+description = "Detects TEST_SECRET assignments"
+regex = '''(?i)(TEST_SECRET_KEY|TEST_SECRET)\s*=\s*['"][^'"]{4,}['"]'''
+keywords = ["TEST_SECRET"]
+severity = "HIGH"
+
+[[rules]]
+id = "hardcoded-weak-secret"
+description = "Detects weak hardcoded secrets"
+regex = '''(?i)(secret|password|key|token)\s*[=:]\s*['"]([a-zA-Z0-9!@#$%]{4,})['"]'''
+keywords = ["secret", "password", "key", "token"]
+severity = "MEDIUM"

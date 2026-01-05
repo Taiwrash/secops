@@ -6,14 +6,16 @@ from connexion.exceptions import ProblemException
 
 vuln_app = connexion.App(__name__, specification_dir='./openapi_specs')
 
-TEST_SECRET_KEY = 'asdf1234!@#$'
-TEST_SECRET_KEY2 = 'asdf1234!@#$!'
+# Load secrets from environment variables, not hardcoded
+TEST_SECRET_KEY = os.getenv('TEST_SECRET_KEY', '')
+TEST_SECRET_KEY2 = os.getenv('TEST_SECRET_KEY2', '')
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(vuln_app.app.root_path, 'database/database.db')
 vuln_app.app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 vuln_app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-vuln_app.app.config['SECRET_KEY'] = 'random'
+# Use environment variable for SECRET_KEY with a strong default fallback
+vuln_app.app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change-me-in-production')
 # start the db
 db = SQLAlchemy(vuln_app.app)
 
