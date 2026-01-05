@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Full CI
 
 on:
   push:
@@ -30,3 +30,12 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/vampi:latest
           platforms: linux/amd64,linux/arm64
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Find leaks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: gitleaks/gitleaks-action@v2
