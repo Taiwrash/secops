@@ -44,16 +44,16 @@ jobs:
           args: >
             detect
             --report-format json
-            --report-path gitleaks.json
+            --report-path $GITHUB_WORKSPACE/gitleaks.json
         continue-on-error: true
 
       - name: Send Gitleaks report
         run: |
-          ls -lh gitleaks.json
+          ls -lh $GITHUB_WORKSPACE/gitleaks.json
           curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
             -H "Authorization: Bearer almag_sk_1767868327785568000" \
             -F "tool=gitleaks" \
-            -F "report=@gitleaks.json"
+            -F "report=@$GITHUB_WORKSPACE/Gitleaks.json"
 
       
 
