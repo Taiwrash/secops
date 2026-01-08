@@ -42,11 +42,20 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         with:
           args: >
-              detect
-              --source .
-              --report-format json
-              --report-path /github/workspace/gitleaks.json
+            detect
+            --source .
+            --report-format json
+            --report-path gitleaks.json
+            --exit-code 0
+            --verbose
         continue-on-error: true
+
+      - name: Verify report
+        run: |
+            pwd
+            ls -lah
+            cat gitleaks.json
+
 
       - name: Send Gitleaks report
         run: |
