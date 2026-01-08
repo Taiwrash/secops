@@ -37,7 +37,7 @@ jobs:
       -
        name: Checkout the repo
        uses: actions/checkout@v3
-       
+
       - name: Run Gitleaks (JSON output)
         run: |
           docker run --rm \
@@ -60,7 +60,7 @@ jobs:
       - name: Send Gitleaks report to Trigra
         run: |
           curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_1767868327785568000" \
+            -H "Authorization: Bearer almag_sk_1767870889258439000" \
             -F "tool=gitleaks" \
             -F "format=json" \
             -F "report=@gitleaks.json"
@@ -89,7 +89,7 @@ jobs:
         run: |
           ls -lh trivy.json
           curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_1767868327785568000" \
+            -H "Authorization: Bearer almag_sk_1767870889258439000" \
             -F "tool=trivy" \
             -F "report=@trivy.json"
 
