@@ -76,11 +76,12 @@ jobs:
         run: |
           semgrep --config p/ci --error
 
-
+      - name: Build an image from Dockerfile
+        run: docker build -t docker.io/taiwrash/secops:${{ github.sha }} .
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.33.1
         with:
-          image-ref: docker.io/taiwrash/trigra:latest
+          image-ref: 'docker.io/taiwrash/secops:${{ github.sha }}'
           format: json
           output: trivy.json
         continue-on-error: true
