@@ -37,21 +37,7 @@ jobs:
       -
        name: Checkout the repo
        uses: actions/checkout@v3
-
-      - name: Find leaks
-        uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
-
-      - name: Send Gitleaks report
-        run: |
-          ls -lh results.sarif
-          curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_1767868327785568000" \
-            -F "tool=gitleaks" \
-            -F "format=sarif" \
-            -F "report=@results.sarif"
-
-
+       
       - name: Run Gitleaks (JSON output)
         run: |
           docker run --rm \
@@ -106,3 +92,27 @@ jobs:
             -H "Authorization: Bearer almag_sk_1767868327785568000" \
             -F "tool=trivy" \
             -F "report=@trivy.json"
+
+
+
+
+
+
+
+
+
+
+
+
+      # - name: Find leaks
+      #   uses: gitleaks/gitleaks-action@v2
+      #   continue-on-error: true
+
+      # - name: Send Gitleaks report
+      #   run: |
+      #     ls -lh results.sarif
+      #     curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
+      #       -H "Authorization: Bearer almag_sk_1767868327785568000" \
+      #       -F "tool=gitleaks" \
+      #       -F "format=sarif" \
+      #       -F "report=@results.sarif"
