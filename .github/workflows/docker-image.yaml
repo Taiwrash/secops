@@ -70,7 +70,7 @@ jobs:
       - name: Send Trivy report
         run: |
           ls -lh trivy.json
-          curl -X POST http://localhost:8080/api/v1/ingest \
+          curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
             -H "Authorization: Bearer almag_sk_1767690502435335000" \
             -F "tool=trivy" \
             -F "report=@trivy.json"
