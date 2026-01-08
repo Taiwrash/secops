@@ -42,18 +42,19 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         with:
           args: >
-            detect
-            --report-format json
-            --report-path $GITHUB_WORKSPACE/gitleaks.json
+              detect
+              --source .
+              --report-format json
+              --report-path /github/workspace/gitleaks.json
         continue-on-error: true
 
       - name: Send Gitleaks report
         run: |
-          ls -lh $GITHUB_WORKSPACE/gitleaks.json
+          ls -lh /gitleaks.json
           curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
             -H "Authorization: Bearer almag_sk_1767868327785568000" \
             -F "tool=gitleaks" \
-            -F "report=@$GITHUB_WORKSPACE/Gitleaks.json"
+            -F "report=@gitleaks.json"
 
       
 
