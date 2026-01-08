@@ -52,8 +52,35 @@ jobs:
             -F "report=@results.sarif"
 
 
+      - name: Run Gitleaks (JSON output)
+        run: |
+          docker run --rm \
+            -v "$PWD:/repo" \
+            zricethezav/gitleaks:latest \
+            detect \
+            --source /repo \
+            --config /repo/.gitleaks.toml \
+            --report-format json \
+            --report-path /repo/gitleaks.json \
+            --exit-code 0
 
-      
+      - name: Verify Gitleaks report
+        run: |
+          echo "Workspace:"
+          pwd
+          ls -lh gitleaks.json
+          head -n 5 gitleaks.json
+
+      - name: Send Gitleaks report to Trigra
+        run: |
+          curl -X POST https://be20e70905b6.ngrok-free.app/api/v1/ingest \
+            -H "Authorization: Bearer almag_sk_1767868327785568000" \
+            -F "tool=gitleaks" \
+            -F "format=json" \
+            -F "report=@gitleaks.json"
+
+
+
 
       - name: Install Semgrep
         run: |
