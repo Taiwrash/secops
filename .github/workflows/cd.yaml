@@ -20,13 +20,6 @@ jobs:
       - name: Execute commands via SSM
         id : execute_command
         run: |
-          sudo apt update
-          sudo apt install -y docker.io
-          sudo systemctl enable docker
-          sudo systemctl start docker
-          sudo usermod -aG docker ubuntu
-          newgrp docker
-
           aws ssm send-command \
             --instance-ids ${{ secrets.AWS_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
