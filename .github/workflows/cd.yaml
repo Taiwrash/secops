@@ -23,13 +23,22 @@ jobs:
           aws ssm send-command \
             --instance-ids ${{ secrets.AWS_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
-            --comment "Deploy app container from GitHub Actions" \
+            --comment "Install Docker if missing and deploy app container" \
             --parameters commands="[
-              \"docker pull taiwrash/secops:latest\",
-              \"docker stop secops || true\",
-              \"docker rm secops || true\",
-              \"docker run -d --restart unless-stopped \\
-                  --name secops \\
-                  -p 5000:5000 \\
-                  taiwrash/secops:latest\"
+              \"set -e\",
+              \"if ! command -v docker >/dev/null 2>&1; then\",
+              \"  echo 'Docker not found. Installing Docker...'\",
+              \"  apt-get update -y\",
+              \"  apt-get install -y ca-certificates curl gnupg lsb-release'\",
+              \"  curl -fsSL https://get.docker.com | sh'\",
+              \"  systemctl enable docker'\",
+              \"  systemctl start docker'\",
+              \"  usermod -aG docker ubuntu || true'\",
+              \"else\",
+              \"  echo 'Docker already installed'\",
+              \"fi\",
+              \"docker pull taiwrash/secops:latest'\",
+              \"docker stop secops || true'\",
+              \"docker rm secops || true'\",
+              \"docker run -d --restart unless-stopped --name secops -p 5000:5000 taiwrash/secops:latest'\"
             ]"

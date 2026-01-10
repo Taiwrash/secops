@@ -7,10 +7,6 @@ from connexion.exceptions import ProblemException
 vuln_app = connexion.App(__name__, specification_dir='./openapi_specs')
 
 # Load secrets from environment variables, not hardcoded
-TEST_SECRET_KEY = os.getenv('TEST_SECRET_KEY', '')
-TEST_SECRET_KEY3 = 'ghp_test1234567890abcdefGHIJKLMNOPQRSTUVWX'
-TEST_SECRET_KEY4 = 'ghp_test1234567890abcde'
-
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(vuln_app.app.root_path, 'database/database.db')
 vuln_app.app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 vuln_app.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
