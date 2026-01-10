@@ -1,0 +1,47 @@
+name: Full CD
+
+on:
+    workflow_run:
+        workflows: ["Full CI"]
+        types:
+            - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      
+      - name: Execute commands via SSM
+        id : execute_command
+        run: |
+          aws ssm send-command \
+            --instance-ids ${{ secrets.AWS_INSTANCE_ID }} \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy app container from GitHub Actions" \
+            --parameters commands="[
+              \"docker pull taiwrash/secops:latest\",
+              \"docker stop secops || true\",
+              \"docker rm secops || true\",
+              \"docker run -d --restart unless-stopped \\
+                  --name secops \\
+                  -p 5000:5000 \\
+                  taiwrash/secops:latest\"
+            ]"
+
+      - name: Output execution via SSM
+        id : output_execution
+        run: |
+          COMMAND_ID=${{ steps.execute_command.outputs.command_id }}
+          aws ssm list-command-invocations \
+            --details \
+            --instance-id ${{ secrets.AWS_INSTANCE_ID }} \
+            --query "CommandInvocations[].CommandPlugins[].{Status:Status,Output:Output}" \
+            --command-id "$COMMAND_ID" \
+            --output text
