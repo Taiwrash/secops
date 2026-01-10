@@ -48,7 +48,7 @@ jobs:
           ALB_SG_ID=$(aws ec2 create-security-group \
           --group-name secops-alb-sg \
           --description "ALB SG for secops app" \
-          --vpc-id VPC_ID \
+          --vpc-id ${{secrets.VPC_ID}} \
           --query GroupId \
           --output text)
           aws ec2 authorize-security-group-ingress \
@@ -65,7 +65,7 @@ jobs:
           --name secops-tg \
           --protocol HTTP \
           --port 5000 \
-          --vpc-id VPC_ID \
+          --vpc-id ${{secrets.VPC_ID}} \
           --target-type instance \
           --health-check-protocol HTTP \
           --health-check-path "/" \
