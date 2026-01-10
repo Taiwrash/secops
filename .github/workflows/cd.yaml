@@ -42,3 +42,61 @@ jobs:
               \"docker rm secops || true'\",
               \"docker run -d --restart unless-stopped --name secops -p 5000:5000 taiwrash/secops:latest'\"
             ]"
+       
+      - name: ALB
+        run: |
+          ALB_SG_ID=$(aws ec2 create-security-group \
+          --group-name secops-alb-sg \
+          --description "ALB SG for secops app" \
+          --vpc-id VPC_ID \
+          --query GroupId \
+          --output text)
+          aws ec2 authorize-security-group-ingress \
+            --group-id $ALB_SG_ID \
+            --protocol tcp \
+            --port 80 \
+            --cidr 0.0.0.0/0
+          aws ec2 authorize-security-group-ingress \
+          --group-id EC2_SG_ID \
+          --protocol tcp \
+          --port 5000 \
+          --source-group $ALB_SG_ID
+          TG_ARN=$(aws elbv2 create-target-group \
+          --name secops-tg \
+          --protocol HTTP \
+          --port 5000 \
+          --vpc-id VPC_ID \
+          --target-type instance \
+          --health-check-protocol HTTP \
+          --health-check-path "/" \
+          --query TargetGroups[0].TargetGroupArn \
+          --output text)
+          aws elbv2 register-targets \
+          --target-group-arn $TG_ARN \
+          --targets Id=${{ secrets.AWS_INSTANCE_ID }},Port=5000
+
+          ALB_ARN=$(aws elbv2 create-load-balancer \
+          --name secops-alb \
+          --subnets SUBNET_ID_1 SUBNET_ID_2 \
+          --security-groups $ALB_SG_ID \
+          --scheme internet-facing \
+          --type application \
+          --ip-address-type ipv4 \
+          --query LoadBalancers[0].LoadBalancerArn \
+          --output text)
+
+          aws elbv2 create-listener \
+          --load-balancer-arn $ALB_ARN \
+          --protocol HTTP \
+          --port 80 \
+          --default-actions Type=forward,TargetGroupArn=$TG_ARN
+
+          aws elbv2 describe-load-balancers \
+          --load-balancer-arns $ALB_ARN \
+          --query LoadBalancers[0].DNSName \
+          --output text
+
+
+
+
+
