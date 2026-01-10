@@ -1,17 +1,30 @@
-version: "3"
-services:
- vampi-secure:
-  build: ./
-  container_name: vampi-secure
-  ports:
-   - 5001:5000
-  environment:
-   - vulnerable=0
+# version: "3"
+# services:
+#  secops-secure:
+#   build: ./
+#   container_name: secops-secure
+#   ports:
+#    - 5001:5000
+#   environment:
+#    - vulnerable=0
 
- vampi-vulnerable:
-  build: ./
-  container_name: vampi-vulnerable
-  ports:
-   - 5002:5000
-  environment:
-   - vulnerable=1
+#  secops-vulnerable:
+#   build: ./
+#   container_name: secops-vulnerable
+#   ports:
+#    - 5002:5000
+#   environment:
+#    - vulnerable=1
+
+
+version: "3"
+
+services:
+  secops:
+    image: taiwrash/secops:latest
+    container_name: secops
+    ports:
+      - "8080:8080"
+    environment:
+      - vulnerable=0
+    restart: unless-stopped
