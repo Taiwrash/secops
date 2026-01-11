@@ -57,7 +57,7 @@ jobs:
             --port 80 \
             --cidr 0.0.0.0/0
           aws ec2 authorize-security-group-ingress \
-          --group-id EC2_SG_ID \
+          --group-id ${{secrets.EC2_SG_ID}} \
           --protocol tcp \
           --port 5000 \
           --source-group $ALB_SG_ID
@@ -77,7 +77,7 @@ jobs:
 
           ALB_ARN=$(aws elbv2 create-load-balancer \
           --name secops-alb \
-          --subnets SUBNET_ID_1 SUBNET_ID_2 \
+          --subnets ${{secrets.SUBNET_ID_1}} \
           --security-groups $ALB_SG_ID \
           --scheme internet-facing \
           --type application \
