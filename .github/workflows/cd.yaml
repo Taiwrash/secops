@@ -95,7 +95,16 @@ jobs:
           --load-balancer-arns $ALB_ARN \
           --query LoadBalancers[0].DNSName \
           --output text
+      - name: Cleanup AWS resources on failure
+        if: failure()
+        run: |
+          set +e
 
+          aws elbv2 delete-load-balancer --load-balancer-arn $ALB_ARN || true
+          aws elbv2 wait load-balancers-deleted --load-balancer-arns $ALB_ARN || true
+
+          aws elbv2 delete-target-group --target-group-arn $TG_ARN || true
+          aws ec2 delete-security-group --group-id $ALB_SG_ID || true
 
 
 
