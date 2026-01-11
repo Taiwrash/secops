@@ -46,7 +46,7 @@ jobs:
       - name: ALB
         run: |
           ALB_SG_ID=$(aws ec2 create-security-group \
-          --group-name secops-alb-sg \
+          --group-name secops-for-alb-sg \
           --description "ALB SG for secops app" \
           --vpc-id ${{secrets.VPC_ID}} \
           --query GroupId \
