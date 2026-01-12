@@ -94,7 +94,11 @@ jobs:
           aws elbv2 describe-load-balancers \
           --load-balancer-arns $ALB_ARN \
           --query LoadBalancers[0].DNSName \
-          --output text
+          --output text \
+          echo "ALB_ARN=$ALB_ARN" >> $GITHUB_ENV
+          echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
+          echo "ALB_SG_ID=$ALB_SG_ID" >> $GITHUB_ENV
+
       - name: Cleanup AWS resources on failure
         if: failure()
         run: |
