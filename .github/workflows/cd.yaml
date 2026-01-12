@@ -100,11 +100,25 @@ jobs:
         run: |
           set +e
 
-          aws elbv2 delete-load-balancer --load-balancer-arn $ALB_ARN || true
-          aws elbv2 wait load-balancers-deleted --load-balancer-arns $ALB_ARN || true
+          if [ -n "$ALB_ARN" ]; then
+            aws elbv2 delete-load-balancer --load-balancer-arn "$ALB_ARN"
+            aws elbv2 wait load-balancers-deleted --load-balancer-arns "$ALB_ARN"
+          else
+            echo "ALB_ARN not set, skipping ALB deletion"
+          fi
 
-          aws elbv2 delete-target-group --target-group-arn $TG_ARN || true
-          aws ec2 delete-security-group --group-id $ALB_SG_ID || true
+          if [ -n "$TG_ARN" ]; then
+            aws elbv2 delete-target-group --target-group-arn "$TG_ARN"
+          else
+            echo "TG_ARN not set, skipping target group deletion"
+          fi
+
+          if [ -n "$ALB_SG_ID" ]; then
+            aws ec2 delete-security-group --group-id "$ALB_SG_ID"
+          else
+            echo "ALB_SG_ID not set, skipping security group deletion"
+          fi
+
 
 
 
