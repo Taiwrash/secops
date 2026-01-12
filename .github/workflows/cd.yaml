@@ -1,9 +1,11 @@
 name: Full CD
 
 on:
-    workflow_run:
-        workflows: ["Full CI"]
-        types: [completed]
+  workflow_dispatch:
+
+    # workflow_run:
+    #     workflows: ["Full CI"]
+    #     types: [completed]
 
 jobs:
   deploy:
