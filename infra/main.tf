@@ -83,7 +83,7 @@ resource "aws_security_group" "ec2" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP/32"] # lock this down
+    cidr_blocks = ["44.212.185.235/32"] # lock this down
   }
 
   egress {
