@@ -35,7 +35,7 @@ jobs:
       - name: Send Gitleaks report to Trigra
         run: |
           curl -X POST https://tulsa-university-ownership-silly.trycloudflare.com/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_15b14613b776d406e619f29f" \
+            -H "Authorization: Bearer almag_sk_aeccd7889cd35ffe4e867032" \
             -F "tool=gitleaks" \
             -F "format=json" \
             -F "report=@gitleaks.json"
@@ -62,7 +62,7 @@ jobs:
         run: |
           ls -lh trivy.json
           curl -X POST https://tulsa-university-ownership-silly.trycloudflare.com/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_15b14613b776d406e619f29f" \
+            -H "Authorization: Bearer almag_sk_aeccd7889cd35ffe4e867032" \
             -F "tool=trivy" \
             -F "report=@trivy.json"
 
