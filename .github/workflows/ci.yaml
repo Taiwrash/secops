@@ -34,8 +34,8 @@ jobs:
 
       - name: Send Gitleaks report to Trigra
         run: |
-          curl -X POST https://7a0cde14a447.ngrok-free.app/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_1768005187824615000" \
+          curl -X POST https://tulsa-university-ownership-silly.trycloudflare.com/api/v1/ingest \
+            -H "Authorization: Bearer almag_sk_15b14613b776d406e619f29f" \
             -F "tool=gitleaks" \
             -F "format=json" \
             -F "report=@gitleaks.json"
@@ -61,8 +61,8 @@ jobs:
       - name: Send Trivy report
         run: |
           ls -lh trivy.json
-          curl -X POST https://7a0cde14a447.ngrok-free.app/api/v1/ingest \
-            -H "Authorization: Bearer almag_sk_1768005187824615000" \
+          curl -X POST https://tulsa-university-ownership-silly.trycloudflare.com/api/v1/ingest \
+            -H "Authorization: Bearer almag_sk_15b14613b776d406e619f29f" \
             -F "tool=trivy" \
             -F "report=@trivy.json"
 
