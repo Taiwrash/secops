@@ -1,11 +1,20 @@
-name: Full CD
+name: CD with Script using AWSCLI
 
 on:
   workflow_dispatch:
-
-    # workflow_run:
-    #     workflows: ["Full CI"]
-    #     types: [completed]
+    inputs:
+      action:
+        description: "AWSCLI Creation Actions"
+        required: true
+        default: "create"
+        type: choice
+        options:
+          - create
+          - destroy
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "dev"
 
 jobs:
   deploy:
@@ -20,6 +29,7 @@ jobs:
       
       
       - name: Execute commands via SSM
+        if: github.event.inputs.action == 'create'
         id : execute_command
         run: |
           aws ssm send-command \
@@ -46,6 +56,7 @@ jobs:
             ]"
        
       - name: ALB
+        if: github.event.inputs.action == 'create'
         run: |
           set -e
 
@@ -194,7 +205,7 @@ jobs:
           echo "ALB_SG_ID=$ALB_SG_ID" >> $GITHUB_ENV
 
       - name: Cleanup AWS resources on failure
-        if: failure()
+        if: github.event.inputs.action == 'destroy'
         run: |
           set +e
 
